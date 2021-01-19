@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="user" class="org.springframework.springlearn.entity.User">
+		<property name="id" value="1"/>
+		<property name="name" value="user_xml"/>
+		<property name="age" value="0"/>
+		<!--properties 使用自定义的类型转换 -->
+		<property name="properties">
+			<value>
+				k1 = v1
+				k2 = v2
+			</value>
+		</property>
+	</bean>
+
+	<!--将自定义的PropertyEditorRegistrar注册为bean-->
+	<bean class="org.springframework.springlearn.conversion.propertyeditor.springway.CustomPropertyEditorRegistrar"/>
+
+</beans>
