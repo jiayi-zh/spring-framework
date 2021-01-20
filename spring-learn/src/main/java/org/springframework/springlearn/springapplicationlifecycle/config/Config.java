@@ -1,9 +1,9 @@
-package org.springframework.springlearn.lifecycle.config;
+package org.springframework.springlearn.springapplicationlifecycle.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.springlearn.lifecycle.beanfactorypostprocessor.CustomBeanDefinitionRegistryPostProcessor;
-import org.springframework.springlearn.lifecycle.beanfactorypostprocessor.CustomOrderedBeanDefinitionRegistryPostProcessor;
-import org.springframework.springlearn.lifecycle.beanfactorypostprocessor.CustomPriorityOrderedBeanDefinitionRegistryPostProcessor;
+import org.springframework.springlearn.springapplicationlifecycle.beanfactorypostprocessor.CustomBeanDefinitionRegistryPostProcessor;
+import org.springframework.springlearn.springapplicationlifecycle.beanfactorypostprocessor.CustomOrderedBeanDefinitionRegistryPostProcessor;
+import org.springframework.springlearn.springapplicationlifecycle.beanfactorypostprocessor.CustomPriorityOrderedBeanDefinitionRegistryPostProcessor;
 
 /**
  * 自定义Bean实现

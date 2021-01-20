@@ -1,21 +1,19 @@
-package org.springframework.springlearn.lifecycle.beanfactorypostprocessor;
+package org.springframework.springlearn.springapplicationlifecycle.beanfactorypostprocessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.core.Ordered;
-import org.springframework.core.PriorityOrdered;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 不带优先级排序{@link org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor} 实现
+ * {@link org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor} 实现
  *
  * @author ZhengYu
  * @version 1.0 2021/1/19 14:34
  **/
-public class CustomOrderedBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, Ordered {
+public class CustomBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
 	private final String type;
 
@@ -23,7 +21,13 @@ public class CustomOrderedBeanDefinitionRegistryPostProcessor implements BeanDef
 
 	private final AtomicInteger postProcessBeanDefinitionRegistryCounter = new AtomicInteger();
 
-	public CustomOrderedBeanDefinitionRegistryPostProcessor(String type) {
+	/**
+	 * 类型 用来标识 BeanFactory 创建还是 @Bean注入
+	 *
+	 * @param type beanFactory / bean
+	 * @author ZhengYu
+	 */
+	public CustomBeanDefinitionRegistryPostProcessor(String type) {
 		this.type = type;
 	}
 
@@ -31,7 +35,7 @@ public class CustomOrderedBeanDefinitionRegistryPostProcessor implements BeanDef
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		System.out.printf("type:%s, class:%s, method:%s counter:%d %n",
 				type,
-				CustomOrderedBeanDefinitionRegistryPostProcessor.class.getName(),
+				CustomBeanDefinitionRegistryPostProcessor.class.getName(),
 				"postProcessBeanFactory",
 				postProcessBeanFactoryCounter.getAndIncrement());
 	}
@@ -40,13 +44,8 @@ public class CustomOrderedBeanDefinitionRegistryPostProcessor implements BeanDef
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 		System.out.printf("type:%s, class:%s, method:%s counter:%d %n",
 				type,
-				CustomOrderedBeanDefinitionRegistryPostProcessor.class.getName(),
+				CustomBeanDefinitionRegistryPostProcessor.class.getName(),
 				"postProcessBeanDefinitionRegistry",
 				postProcessBeanDefinitionRegistryCounter.getAndIncrement());
-	}
-
-	@Override
-	public int getOrder() {
-		return 1;
 	}
 }

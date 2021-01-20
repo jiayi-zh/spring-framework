@@ -1,4 +1,4 @@
-package org.springframework.springlearn.lifecycle.beanfactorypostprocessor;
+package org.springframework.springlearn.springapplicationlifecycle.beanfactorypostprocessor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

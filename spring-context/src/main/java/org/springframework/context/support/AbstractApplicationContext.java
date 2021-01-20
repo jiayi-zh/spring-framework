@@ -607,7 +607,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Instantiate all remaining (non-lazy-init) singletons.
 				// 1. 尝试从IOC容器中获取名称为 conversionService, 类型为 org.springframework.core.convert.ConversionService 的bean, 存在则与 BeanFactory 关联, 用于类型转换
 				// 2. 如果 BeanFactory 没有关联 {@link org.springframework.util.StringValueResolver}, 则新创建一个与BeanFactory关联, 用于解析属性值
-				// 3. 从IOC容器获取 {@link org.springframework.context.weaving.LoadTimeWeaverAware} 类型的 Bean 名称, 并提前创建
+				// 3. 从IOC容器获取 {@link org.springframework.context.weaving.LoadTimeWeaverAware} 类型的 Bean 名称, 并提前创建 TODO 这里为什么要创建 Aware Bean
 				// 4. BeanFactory 将临时 Classloader 置为 null
 				// 5. BeanFactory 冻结配置
 				// 6. BeanFactory 初始化非延迟单例 Beans
