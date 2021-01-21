@@ -142,6 +142,7 @@ public class EventListenerMethodProcessor
 		}
 	}
 
+	// 扫描所有用 EventListener 注释的注解进行转换 TODO
 	private void processBean(final String beanName, final Class<?> targetType) {
 		if (!this.nonAnnotatedClasses.contains(targetType) &&
 				AnnotationUtils.isCandidateClass(targetType, EventListener.class) &&

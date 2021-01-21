@@ -8,4 +8,12 @@
 		<property name="name" value="user_xml"/>
 		<property name="age" value="0"/>
 	</bean>
+
+	<bean id="user_child" class="org.springframework.springlearn.entity.User" parent="user_xml">
+		<property name="extInfo" value="extInfo"/>
+	</bean>
+
+	<bean id="user_holder" class="org.springframework.springlearn.entity.UserHolder" autowire="constructor">
+		<constructor-arg ref="user_child"/>
+	</bean>
 </beans>

@@ -298,6 +298,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
+				// 获取合并后的 RootBeanDefinition
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
@@ -1288,6 +1289,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (mbd != null && !mbd.stale) {
 			return mbd;
 		}
+		// BeanFactoryPostProcessor 阶段
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
 	}
 
@@ -1330,6 +1332,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 			if (mbd == null || mbd.stale) {
 				previous = mbd;
+				// 判断 BeanDefinition 的 parentName 是否为空
+				//     1. 如果为空, 则直接转换为 RootBeanDefinition(拷贝属性)
+				//     2. 如果不为空, 则先查找到 parentBeanName 的 RootBeanDefinition, 将其配置及属性拷贝， 然后再使用当前的 BeanDefinition 覆盖设置
 				if (bd.getParentName() == null) {
 					// Use copy of given root bean definition.
 					if (bd instanceof RootBeanDefinition) {
@@ -1364,6 +1369,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 								"Could not resolve parent bean definition '" + bd.getParentName() + "'", ex);
 					}
 					// Deep copy with overridden values.
+					// 拷贝属性和 PropertyValue
 					mbd = new RootBeanDefinition(pbd);
 					mbd.overrideFrom(bd);
 				}
