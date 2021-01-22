@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compile(project(":spring-core"))
     compile(project(":spring-context"))
+    compile(project(":spring-aspects"))
 }
 
 test {
