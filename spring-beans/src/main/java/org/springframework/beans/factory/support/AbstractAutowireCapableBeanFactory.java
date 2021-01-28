@@ -1823,7 +1823,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					beanName, "Invocation of init method failed", ex);
 		}
 		if (mbd == null || !mbd.isSynthetic()) {
-			// 调用 BeanPostProcessor 的 postProcessBeforeInitialization 方法
+			// 调用 BeanPostProcessor 的 postProcessAfterInitialization 方法
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
