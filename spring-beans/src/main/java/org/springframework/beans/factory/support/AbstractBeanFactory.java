@@ -299,7 +299,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			try {
-				// 获取合并后的 RootBeanDefinition
+				// 1. 获取合并后的 RootBeanDefinition
 				RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
 				checkMergedBeanDefinition(mbd, beanName, args);
 
@@ -1292,7 +1292,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (mbd != null && !mbd.stale) {
 			return mbd;
 		}
-		// BeanFactoryPostProcessor 阶段
 		return getMergedBeanDefinition(beanName, getBeanDefinition(beanName));
 	}
 

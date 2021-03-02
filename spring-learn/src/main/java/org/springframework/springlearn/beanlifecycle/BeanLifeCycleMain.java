@@ -1,5 +1,6 @@
 package org.springframework.springlearn.beanlifecycle;
 
+import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -14,6 +15,8 @@ import org.springframework.springlearn.beanlifecycle.beanpostprocessor.CustomIns
 import org.springframework.springlearn.beanlifecycle.config.Config;
 import org.springframework.springlearn.entity.User;
 import org.springframework.springlearn.entity.UserHolder;
+
+import java.beans.PropertyDescriptor;
 
 /**
  * Spring Bean 元信息配置 -> 解析 -> 注册
@@ -32,10 +35,14 @@ import org.springframework.springlearn.entity.UserHolder;
  * {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation(Class, String)}
  * Spring Bean 实例化阶段 TODO 需再理解
  * {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean(String, RootBeanDefinition, Object[])}
+ * --> {@link org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor#postProcessMergedBeanDefinition(RootBeanDefinition, Class, String)}
  * Spring Bean 实例化后阶段
  * {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessAfterInstantiation(Object, String)}
  * Spring Bean 属性赋值前阶段
  * {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessProperties(PropertyValues, Object, String)}
+ * {@link org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor#postProcessPropertyValues(PropertyValues, PropertyDescriptor[], Object, String)}
+ * Spring Bean 属性赋值阶段
+ * {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyPropertyValues(String, BeanDefinition, BeanWrapper, PropertyValues)}
  * Spring Bean Aware 接口回调阶段
  * {@link org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#invokeAwareMethods(String, Object)}
  * Spring Bean 初始化前阶段
