@@ -606,7 +606,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			//     2.1 如果返回的 PropertyValues 非空, 则替换掉配置的 PropertyValues
 			populateBean(beanName, mbd, instanceWrapper);
 
-			// 执行 Aware, 这里会进行 AOP, 得到一个代理对象
+			// 执行 Aware
+			// Bean 初始化阶段
+			// Bean 初始化后阶段
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1217,7 +1219,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Candidate constructors for autowiring?
-		// org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor#determineCandidateConstructors 生成构造器
+		// org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor#determineCandidateConstructors 返回Bean name的构造器
+		// BeanDefinition的autowireMode设置为 AUTOWIRE_CONSTRUCTOR
 		Constructor<?>[] ctors = determineConstructorsFromBeanPostProcessors(beanClass, beanName);
 		if (ctors != null || mbd.getResolvedAutowireMode() == AUTOWIRE_CONSTRUCTOR ||
 				mbd.hasConstructorArgumentValues() || !ObjectUtils.isEmpty(args)) {
@@ -1225,10 +1228,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 
 		// Preferred constructors for default construction?
-		// {@see RootBeanDefinition -> ClassDerivedBeanDefinition} 有个获取构造器的实现
+		// {@see RootBeanDefinition -> ClassDerivedBeanDefinition} 有个获取构造器的实现 Kotlin 实现?
 		ctors = mbd.getPreferredConstructors();
 		if (ctors != null) {
-			// 通过构造器创建对象
 			return autowireConstructor(beanName, mbd, ctors, null);
 		}
 
@@ -1331,6 +1333,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						getAccessControlContext());
 			}
 			else {
+				// !mbd.hasMethodOverrides()，即没有方法重写：
+				// -- true: 直接获取无参构造函数, 使用反射API创建对象
+				// -- false: 使用CGLIB生成子类字节码文件, 然后使用无参构造器创建对象
 				beanInstance = getInstantiationStrategy().instantiate(mbd, beanName, this);
 			}
 			BeanWrapper bw = new BeanWrapperImpl(beanInstance);
@@ -1421,10 +1426,12 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (resolvedAutowireMode == AUTOWIRE_BY_NAME || resolvedAutowireMode == AUTOWIRE_BY_TYPE) {
 			MutablePropertyValues newPvs = new MutablePropertyValues(pvs);
 			// Add property values based on autowire by name if applicable.
+			// @Autowired 通过依赖查找指定Bean名称获取属性值
 			if (resolvedAutowireMode == AUTOWIRE_BY_NAME) {
 				autowireByName(beanName, mbd, bw, newPvs);
 			}
 			// Add property values based on autowire by type if applicable.
+			// @Autowired 通过依赖查找指定Bean类型获取属性值
 			if (resolvedAutowireMode == AUTOWIRE_BY_TYPE) {
 				autowireByType(beanName, mbd, bw, newPvs);
 			}
