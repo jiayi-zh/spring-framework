@@ -83,18 +83,19 @@ abstract class ConfigurationClassUtils {
 	 */
 	public static boolean checkConfigurationClassCandidate(
 			BeanDefinition beanDef, MetadataReaderFactory metadataReaderFactory) {
-
 		String className = beanDef.getBeanClassName();
 		if (className == null || beanDef.getFactoryMethodName() != null) {
 			return false;
 		}
 
 		AnnotationMetadata metadata;
+		// 对于还没有加载 Class 的 BeanDefinition, 直接对比名称, 通常都是走这里的逻辑
 		if (beanDef instanceof AnnotatedBeanDefinition &&
 				className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())) {
 			// Can reuse the pre-parsed metadata from the given BeanDefinition...
 			metadata = ((AnnotatedBeanDefinition) beanDef).getMetadata();
 		}
+		// 对于已经加载了 Class 的 BeanDefinition, 需要按条件过滤
 		else if (beanDef instanceof AbstractBeanDefinition && ((AbstractBeanDefinition) beanDef).hasBeanClass()) {
 			// Check already loaded Class if present...
 			// since we possibly can't even load the class file for this Class.
@@ -121,10 +122,14 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		// 获取 @Configuration 注解的所有属性
 		Map<String, Object> config = metadata.getAnnotationAttributes(Configuration.class.getName());
 		if (config != null && !Boolean.FALSE.equals(config.get("proxyBeanMethods"))) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		// 不是 @Configuration 修饰, 判断是否有下列注解：
+		// @Component @ComponentScan @Import @ImportResource
+		// @Bean 修饰的方法
 		else if (config != null || isConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
@@ -133,6 +138,7 @@ abstract class ConfigurationClassUtils {
 		}
 
 		// It's a full or lite configuration candidate... Let's determine the order value, if any.
+		// 获取 @Order 注解的value值, 如果存在则加入 BeanDefinition 的 attribute
 		Integer order = getOrder(metadata);
 		if (order != null) {
 			beanDef.setAttribute(ORDER_ATTRIBUTE, order);
