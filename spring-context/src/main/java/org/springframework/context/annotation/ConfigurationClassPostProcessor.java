@@ -228,7 +228,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
-		// 获取 BeanDefinitionRegistry 的 HashCode
+		// 获取 BeanDefinitionRegistry 的 HashCode, 防止重复处理
 		int registryId = System.identityHashCode(registry);
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
@@ -249,7 +249,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
-		// 获取 BeanDefinitionRegistry 的 HashCode
+		// 获取 BeanDefinitionRegistry 的 HashCode, 防止重复处理
 		int factoryId = System.identityHashCode(beanFactory);
 		if (this.factoriesPostProcessed.contains(factoryId)) {
 			throw new IllegalStateException(

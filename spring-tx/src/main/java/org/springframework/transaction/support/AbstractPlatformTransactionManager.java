@@ -341,17 +341,21 @@ public abstract class AbstractPlatformTransactionManager implements PlatformTran
 	public final TransactionStatus getTransaction(@Nullable TransactionDefinition definition)
 			throws TransactionException {
 
+		// 确保 TransactionDefinition 是不为空的
 		// Use defaults if no transaction definition given.
 		TransactionDefinition def = (definition != null ? definition : TransactionDefinition.withDefaults());
 
+		// 获取事务对象
 		Object transaction = doGetTransaction();
 		boolean debugEnabled = logger.isDebugEnabled();
 
+		// 判断该事务是否为已经存在的事务, 如果是则需要根据事务传播行为做出相应处理
 		if (isExistingTransaction(transaction)) {
 			// Existing transaction found -> check propagation behavior to find out how to behave.
 			return handleExistingTransaction(def, transaction, debugEnabled);
 		}
 
+		// 校验事务定义的超时时间是否小于默认 -1
 		// Check definition settings for new transaction.
 		if (def.getTimeout() < TransactionDefinition.TIMEOUT_DEFAULT) {
 			throw new InvalidTimeoutException("Invalid transaction timeout", def.getTimeout());

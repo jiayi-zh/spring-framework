@@ -273,6 +273,7 @@ public interface TransactionDefinition {
 	 * @see org.springframework.transaction.support.TransactionSynchronizationManager#getCurrentTransactionName()
 	 */
 	@Nullable
+	// 返回事务名称，声明式事务中默认值为“类的完全限定名.方法名”
 	default String getName() {
 		return null;
 	}

@@ -13,6 +13,12 @@ dependencies {
     compile(project(":spring-core"))
     compile(project(":spring-context"))
     compile(project(":spring-aspects"))
+    compile(project(":spring-tx"))
+    compile(project(":spring-jdbc"))
+    /*mysql*/
+    compile 'mysql:mysql-connector-java:5.1.6'
+    /*druid*/
+    implementation group: 'com.alibaba', name: 'druid', version: '1.2.3'
 }
 
 test {

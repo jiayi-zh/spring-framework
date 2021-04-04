@@ -68,6 +68,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * @see TransactionDefinition#getTimeout
 	 * @see TransactionDefinition#isReadOnly
 	 */
+	// 事务获取操作，根据事务属性定义，获取当前事务或者创建新事物
 	TransactionStatus getTransaction(@Nullable TransactionDefinition definition)
 			throws TransactionException;
 
@@ -98,6 +99,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * is already completed (that is, committed or rolled back)
 	 * @see TransactionStatus#setRollbackOnly
 	 */
+	// 事务提交操作，注意这里所说的提交并非直接提交事务，而是根据当前事务状态执行提交或者回滚操作
 	void commit(TransactionStatus status) throws TransactionException;
 
 	/**
@@ -116,6 +118,7 @@ public interface PlatformTransactionManager extends TransactionManager {
 	 * @throws IllegalTransactionStateException if the given transaction
 	 * is already completed (that is, committed or rolled back)
 	 */
+	// 事务回滚操作，同样，也并非一定直接回滚事务，也有可能只是标记事务为只读，等待其他调用方执行回滚
 	void rollback(TransactionStatus status) throws TransactionException;
 
 }
