@@ -500,9 +500,13 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
 	 */
 	protected void initStrategies(ApplicationContext context) {
+		// 初始化 MultipartResolver -> 处理 multipart/form-data 请求
 		initMultipartResolver(context);
+		// 初始化 LocaleResolver -> TODO Locale 这个东西是什么
 		initLocaleResolver(context);
+		// 初始化 ThemeResolver -> TODO 主题?
 		initThemeResolver(context);
+		// 初始化 handlerMappings -> 从 BeanFactory 查找所有的 HandlerMapping.class Bean, 并排序
 		initHandlerMappings(context);
 		initHandlerAdapters(context);
 		initHandlerExceptionResolvers(context);
@@ -593,6 +597,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	private void initHandlerMappings(ApplicationContext context) {
 		this.handlerMappings = null;
 
+		// 从 IOC 容器中获取 HandlerMapping 对象并排序
 		if (this.detectAllHandlerMappings) {
 			// Find all HandlerMappings in the ApplicationContext, including ancestor contexts.
 			Map<String, HandlerMapping> matchingBeans =
@@ -613,6 +618,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			}
 		}
 
+		// 如果 Servlet 的 handlerMappings 为空, 则声明一个默认的
 		// Ensure we have at least one HandlerMapping, by registering
 		// a default HandlerMapping if no other mappings are found.
 		if (this.handlerMappings == null) {

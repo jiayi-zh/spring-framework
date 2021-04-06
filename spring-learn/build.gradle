@@ -15,6 +15,8 @@ dependencies {
     compile(project(":spring-aspects"))
     compile(project(":spring-tx"))
     compile(project(":spring-jdbc"))
+    compile(project(":spring-web"))
+    compile(project(":spring-webmvc"))
     /*mysql*/
     compile 'mysql:mysql-connector-java:5.1.6'
     /*druid*/

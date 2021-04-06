@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * 事务
+ * 编程式事务测试
  *
  * @author ZhengYu
  * @version 1.0 2021/4/4 14:04
@@ -25,7 +25,7 @@ public class DataSourceTransactionManagerTest {
 		// 初始化事务同步缓存回调
 		TransactionSynchronizationManager.initSynchronization();
 		TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-
+			// 这里可以注册回调
 		});
 
 		// 创建一个数据源
