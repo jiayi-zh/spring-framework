@@ -85,6 +85,7 @@ import org.springframework.util.StringUtils;
 public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 		implements ClassFilter, IntroductionAwareMethodMatcher, BeanFactoryAware {
 
+	// 支持的指令集
 	private static final Set<PointcutPrimitive> SUPPORTED_PRIMITIVES = new HashSet<>();
 
 	static {
@@ -189,12 +190,14 @@ public class AspectJExpressionPointcut extends AbstractExpressionPointcut
 	 * Check whether this pointcut is ready to match,
 	 * lazily building the underlying AspectJ pointcut expression.
 	 */
+	// 检查 Pointcut 是否准备好, 懒加载 Pointcut 表达式
 	private PointcutExpression obtainPointcutExpression() {
 		if (getExpression() == null) {
 			throw new IllegalStateException("Must set property 'expression' before attempting to match");
 		}
 		if (this.pointcutExpression == null) {
 			this.pointcutClassLoader = determinePointcutClassLoader();
+			// 返回一个 AspectJ 实现的 PointcutExpression 用于处理 match
 			this.pointcutExpression = buildPointcutExpression(this.pointcutClassLoader);
 		}
 		return this.pointcutExpression;

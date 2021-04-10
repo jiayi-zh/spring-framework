@@ -72,6 +72,11 @@ public class ThrowsAdviceInterceptor implements MethodInterceptor, AfterAdvice {
 	 * @param throwsAdvice the advice object that defines the exception handler methods
 	 * (usually a {@link org.springframework.aop.ThrowsAdvice} implementation)
 	 */
+	// throwsAdvice 通常实现了 ThrowsAdvice 接口, 其方法定义必须如下
+	// public void afterThrowing(Exception ex)
+	// public void afterThrowing(RemoteException)
+	// public void afterThrowing(Method method, Object[] args, Object target, Exception ex)
+	// public void afterThrowing(Method method, Object[] args, Object target, ServletException ex)
 	public ThrowsAdviceInterceptor(Object throwsAdvice) {
 		Assert.notNull(throwsAdvice, "Advice must not be null");
 		this.throwsAdvice = throwsAdvice;

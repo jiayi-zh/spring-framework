@@ -74,6 +74,7 @@ public interface MethodMatcher {
 	 * {@link #matches(java.lang.reflect.Method, Class, Object[])} method
 	 * is required if static matching passed
 	 */
+	// 当前的 MethodMatcher 是否为动态的，决定调用哪个 matches() 方法
 	boolean isRuntime();
 
 	/**

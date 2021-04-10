@@ -33,6 +33,7 @@ import org.springframework.lang.Nullable;
 public class AspectJMethodBeforeAdvice extends AbstractAspectJAdvice implements MethodBeforeAdvice, Serializable {
 
 	public AspectJMethodBeforeAdvice(
+			// AspectJExpressionPointcut 支持的 表达式方式 匹配 pointcut
 			Method aspectJBeforeAdviceMethod, AspectJExpressionPointcut pointcut, AspectInstanceFactory aif) {
 
 		super(aspectJBeforeAdviceMethod, pointcut, aif);

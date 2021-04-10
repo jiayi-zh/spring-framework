@@ -47,7 +47,10 @@ public class ProxyFactory extends ProxyCreatorSupport {
 	 * @param target the target object to be proxied
 	 */
 	public ProxyFactory(Object target) {
+		// 设置 TargetSource
 		setTarget(target);
+		// 获取 target 实现的所有接口, 将其加入到 interfaces 中
+		// 在与 IntroductionAdvisor 结合使用时需要注意
 		setInterfaces(ClassUtils.getAllInterfaces(target));
 	}
 

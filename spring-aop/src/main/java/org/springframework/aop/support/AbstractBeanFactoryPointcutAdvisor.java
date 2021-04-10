@@ -111,6 +111,7 @@ public abstract class AbstractBeanFactoryPointcutAdvisor extends AbstractPointcu
 		Assert.state(this.adviceBeanName != null, "'adviceBeanName' must be specified");
 		Assert.state(this.beanFactory != null, "BeanFactory must be set to resolve 'adviceBeanName'");
 
+		// 是否为一个单例Bean
 		if (this.beanFactory.isSingleton(this.adviceBeanName)) {
 			// Rely on singleton semantics provided by the factory.
 			advice = this.beanFactory.getBean(this.adviceBeanName, Advice.class);

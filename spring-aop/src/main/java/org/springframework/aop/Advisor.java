@@ -33,7 +33,7 @@ import org.aopalliance.aop.Advice;
  * @author Rod Johnson
  * @author Juergen Hoeller
  */
-public interface Advisor {
+public interface Advisor { // Advice 容器
 
 	/**
 	 * Common placeholder for an empty {@code Advice} to be returned from
@@ -64,6 +64,7 @@ public interface Advisor {
 	 * proxy creation to ensure that Advisors have the correct lifecycle model.
 	 * @return whether this advice is associated with a particular target instance
 	 */
+	// Advice 是否为在BeanFactory中独有的或者共享的实例
 	boolean isPerInstance();
 
 }
