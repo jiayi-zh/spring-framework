@@ -55,6 +55,7 @@ public interface AdvisorAdapterRegistry {
 	 * @throws UnknownAdviceTypeException if the Advisor type is
 	 * not understood by any registered AdvisorAdapter
 	 */
+	// 将 Advisor 转换为 MethodInterceptor
 	MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException;
 
 	/**

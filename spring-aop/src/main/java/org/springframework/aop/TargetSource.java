@@ -52,6 +52,7 @@ public interface TargetSource extends TargetClassAware {
 	 * @return {@code true} if the target is immutable
 	 * @see #getTarget
 	 */
+	// 控制 getTarget() 是否返回同一个对象, 如果返回 false, 需要调用 releaseTarget(Object target) 方法释放代理对象
 	boolean isStatic();
 
 	/**
