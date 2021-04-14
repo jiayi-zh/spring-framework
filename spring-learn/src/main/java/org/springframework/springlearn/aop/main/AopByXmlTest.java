@@ -1,4 +1,4 @@
-package org.springframework.springlearn.aop.spring;
+package org.springframework.springlearn.aop.main;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -10,7 +10,7 @@ import org.springframework.springlearn.aop.service.CustomAopService;
  * @author ZhengYu
  * @version 1.0 2021/4/14 9:02
  **/
-public class SpringAopByXml {
+public class AopByXmlTest {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:aop/spring-aop-native.xml");
 
