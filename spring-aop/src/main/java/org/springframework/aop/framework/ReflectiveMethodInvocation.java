@@ -159,6 +159,8 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	@Nullable
 	public Object proceed() throws Throwable {
 		// 当执行到最后一个 Interceptor 或者 Interceptor 的数量为0时
+		// PS： MethodBeforeAdvice 会先执行结束, MethodAfterAdvice 会不断压栈, 直到所有的 MethodBeforeAdvice 执行结束,
+		// 这时候会调用 invokeJoinpoint() 方法, MethodAfterAdvice 才会弹栈然后执行
 		// We start with an index of -1 and increment early.
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
 			return invokeJoinpoint();

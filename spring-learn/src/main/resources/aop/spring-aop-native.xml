@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--target bean-->
+	<bean id="customAopService" class="org.springframework.springlearn.aop.service.impl.CustomAopServiceImpl"/>
+
+	<!--advice-->
+	<bean id="customBeforeAdvice" class="org.springframework.springlearn.aop.advice.CustomBeforeAdvice"/>
+	<bean id="customAfterAdvice" class="org.springframework.springlearn.aop.advice.CustomAfterAdvice"/>
+	<bean id="customAfterAdviceCopy" class="org.springframework.springlearn.aop.advice.CustomAfterAdviceCopy"/>
+	<bean id="customMethodInterceptor" class="org.springframework.springlearn.aop.interceptor.CustomMethodInterceptor"/>
+
+	<!--proxy-->
+	<bean id="customAopServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<list>
+				<value>org.springframework.springlearn.aop.service.CustomAopService</value>
+			</list>
+		</property>
+
+		<property name="target" ref="customAopService"/>
+
+		<!--配置拦截器-->
+		<property name="interceptorNames">
+			<list>
+				<value>customAfterAdvice</value>
+				<value>customAfterAdviceCopy</value>
+				<value>customBeforeAdvice</value>
+				<value>customMethodInterceptor</value>
+			</list>
+		</property>
+	</bean>
+</beans>
