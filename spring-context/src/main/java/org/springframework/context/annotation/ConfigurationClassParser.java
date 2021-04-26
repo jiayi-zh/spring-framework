@@ -578,20 +578,27 @@ class ConfigurationClassParser {
 				for (SourceClass candidate : importCandidates) {
 					// 如果被导入的类是 ImportSelector的子类, 直接处理
 					if (candidate.isAssignable(ImportSelector.class)) {
+						// 获取 @Import 导入的 ImportSelector 实现类
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
+						// 初始化导入对象，并处理其 Aware 接口
 						ImportSelector selector = ParserStrategyUtils.instantiateClass(candidateClass, ImportSelector.class,
 								this.environment, this.resourceLoader, this.registry);
+						// 处理排除的导入类
 						Predicate<String> selectorFilter = selector.getExclusionFilter();
 						if (selectorFilter != null) {
 							exclusionFilter = exclusionFilter.or(selectorFilter);
 						}
+						// 是否为 DeferredImportSelector 的实现类
 						if (selector instanceof DeferredImportSelector) {
+							// 如果是 DeferredImportSelector 的实现类, 则将 BeanDefinition 的处理延后到所有 Configuration 类都处理结束执行
 							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						}
 						else {
+							// 如果不是 DeferredImportSelector 的实现类, 立刻处理
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames, exclusionFilter);
+							// 递归处理
 							processImports(configClass, currentSourceClass, importSourceClasses, exclusionFilter, false);
 						}
 					}
@@ -605,7 +612,7 @@ class ConfigurationClassParser {
 										this.environment, this.resourceLoader, this.registry);
 						configClass.addImportBeanDefinitionRegistrar(registrar, currentSourceClass.getMetadata());
 					}
-					// 纯配置类立即处理
+					// @Import 注解导入类最终都走到这个方法 -> 将待导入的类名与注解信息都添加到 importStack 中
 					else {
 						// Candidate class not an ImportSelector or ImportBeanDefinitionRegistrar ->
 						// process it as an @Configuration class
