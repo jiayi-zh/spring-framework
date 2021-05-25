@@ -295,6 +295,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 			if (!typeCheckOnly) {
+				// 标记当前 beanName 正在创建
 				markBeanAsCreated(beanName);
 			}
 

@@ -89,7 +89,7 @@ abstract class ConfigurationClassUtils {
 		}
 
 		AnnotationMetadata metadata;
-		// 对于还没有加载 Class 的 BeanDefinition, 直接对比名称, 通常都是走这里的逻辑
+		// 获取该 BeanDefinition 的 AnnotationMetadata 注解元信息
 		if (beanDef instanceof AnnotatedBeanDefinition &&
 				className.equals(((AnnotatedBeanDefinition) beanDef).getMetadata().getClassName())) {
 			// Can reuse the pre-parsed metadata from the given BeanDefinition...
