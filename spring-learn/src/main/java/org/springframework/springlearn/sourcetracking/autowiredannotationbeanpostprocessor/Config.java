@@ -1,8 +1,8 @@
-package org.springframework.springlearn.sourcetracking.autowired;
+package org.springframework.springlearn.sourcetracking.autowiredannotationbeanpostprocessor;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.springlearn.entity.User;
+import org.springframework.stereotype.Component;
 
 /**
  * User
@@ -10,7 +10,7 @@ import org.springframework.springlearn.entity.User;
  * @author ZhengYu
  * @version 1.0 2021/4/23 17:52
  **/
-@Configuration
+@Component
 public class Config {
 
 	@Bean

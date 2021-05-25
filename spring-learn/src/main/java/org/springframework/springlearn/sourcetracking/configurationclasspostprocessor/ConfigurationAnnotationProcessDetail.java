@@ -12,12 +12,12 @@ import org.springframework.springlearn.sourcetracking.configurationclasspostproc
  * @version 1.0 2021/3/30 11:25
  **/
 @Import(ImportedClazz.class)
-public class ImportAnnotationSourceTracking {
+public class ConfigurationAnnotationProcessDetail {
 
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 
-		applicationContext.register(ImportAnnotationSourceTracking.class);
+		applicationContext.register(ConfigurationAnnotationProcessDetail.class);
 
 		applicationContext.refresh();
 
