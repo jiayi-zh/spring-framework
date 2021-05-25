@@ -100,11 +100,17 @@ public final class ModelFactory {
 	 */
 	public void initModel(NativeWebRequest request, ModelAndViewContainer container, HandlerMethod handlerMethod)
 			throws Exception {
-
+		// 在当前request中获取使用@SessionAttribute注解声明的参数
 		Map<String, ?> sessionAttributes = this.sessionAttributesHandler.retrieveAttributes(request);
+		// 将@SessionAttribute声明的参数封装到ModelAndViewContainer中
 		container.mergeAttributes(sessionAttributes);
+		// 调用前面获取的使用@ModelAttribute标注的方法
 		invokeModelAttributeMethods(request, container);
 
+		// 这里首先获取目标handler执行所需的参数中与@SessionAttribute同名或同类型的参数，
+		// 也就是handler想要直接从@SessionAttribute中声明的参数中获取的参数。然后对这些参数
+		// 进行遍历，首先判断request中是否包含该属性，如果不包含，则从之前的SessionAttribute缓存
+		// 中获取，如果两个都没有，则直接抛出异常
 		for (String name : findSessionAttributeArguments(handlerMethod)) {
 			if (!container.containsAttribute(name)) {
 				Object value = this.sessionAttributesHandler.retrieveAttribute(request, name);
@@ -124,7 +130,13 @@ public final class ModelFactory {
 			throws Exception {
 
 		while (!this.modelMethods.isEmpty()) {
+			// 这里getNextModelMethod()方法始终会获取modelMethods中的第0号为的方法，
+			// 后续该方法执行完了之后则会将该方法从modelMethods移除掉，因而这里while
+			// 循环只需要判断modelMethods是否为空即可
 			InvocableHandlerMethod modelMethod = getNextModelMethod(container).getHandlerMethod();
+			// 获取当前方法中标注的ModelAttribute属性，然后判断当前request中是否有与该属性中name字段
+			// 标注的值相同的属性，如果存在，并且当前ModelAttribute设置了不对该属性进行绑定，那么
+			// 就直接略过当前方法的执行
 			ModelAttribute ann = modelMethod.getMethodAnnotation(ModelAttribute.class);
 			Assert.state(ann != null, "No ModelAttribute annotation");
 			if (container.containsAttribute(ann.name())) {
@@ -134,12 +146,17 @@ public final class ModelFactory {
 				continue;
 			}
 
+			// 通过ArgumentResolver对方法参数进行处理，并且调用目标方法
 			Object returnValue = modelMethod.invokeForRequest(request, container);
+			// 如果当前方法的返回值不为空，则判断当前@ModelAttribute是否设置了需要绑定返回值，
+			// 如果设置了，则将返回值绑定到请求中，后续handler可以直接使用该参数
 			if (!modelMethod.isVoid()){
 				String returnValueName = getNameForReturnValue(returnValue, modelMethod.getReturnType());
 				if (!ann.binding()) {
 					container.setBindingDisabled(returnValueName);
 				}
+				// 如果request中不包含该参数，则将该返回值添加到ModelAndViewContainer中，
+				// 供handler使用
 				if (!container.containsAttribute(returnValueName)) {
 					container.addAttribute(returnValueName, returnValue);
 				}
