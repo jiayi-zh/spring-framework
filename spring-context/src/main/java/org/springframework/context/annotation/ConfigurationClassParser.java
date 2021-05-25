@@ -268,7 +268,7 @@ class ConfigurationClassParser {
 	protected final SourceClass doProcessConfigurationClass(
 			ConfigurationClass configClass, SourceClass sourceClass, Predicate<String> filter)
 			throws IOException {
-		// 如果是 Component 注解修饰的 BeanDefinition, 先处理成员变量 TODO 这里需要实际操作一下
+		// 如果是 Component 注解修饰的 BeanDefinition, 先处理嵌套类 TODO 这里需要实际操作一下
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
 			processMemberClasses(configClass, sourceClass, filter);

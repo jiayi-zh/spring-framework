@@ -260,7 +260,6 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Nullable
 	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
 			throws BeanCreationException {
-		System.out.println("STEP1: org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor#determineCandidateConstructors");
 		// Let's check for lookup methods here...
 		// 处理 @Lookup 注解 TODO
 		if (!this.lookupMethodsChecked.contains(beanName)) {

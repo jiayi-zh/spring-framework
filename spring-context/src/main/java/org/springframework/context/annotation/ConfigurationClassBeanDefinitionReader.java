@@ -136,15 +136,18 @@ class ConfigurationClassBeanDefinitionReader {
 			this.importRegistry.removeImportingClass(configClass.getMetadata().getClassName());
 			return;
 		}
-
+		// 处理 @Import 导入的配置类
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
+		// 处理 @Bean 注解的方法
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}
 
+		// 处理 @ImportedResource 配置
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
+		// 处理 @Import 导入的 org.springframework.context.annotation.ImportBeanDefinitionRegistrar 配置
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 
@@ -214,6 +217,7 @@ class ConfigurationClassBeanDefinitionReader {
 		ConfigurationClassBeanDefinition beanDef = new ConfigurationClassBeanDefinition(configClass, metadata, beanName);
 		beanDef.setSource(this.sourceExtractor.extractSource(metadata, configClass.getResource()));
 
+		// @Bean 作用于静态方法上
 		if (metadata.isStatic()) {
 			// static @Bean method
 			if (configClass.getMetadata() instanceof StandardAnnotationMetadata) {
@@ -224,6 +228,7 @@ class ConfigurationClassBeanDefinitionReader {
 			}
 			beanDef.setUniqueFactoryMethodName(methodName);
 		}
+		// @Bean 作用于非静态方法上
 		else {
 			// instance @Bean method
 			beanDef.setFactoryBeanName(configClass.getBeanName());

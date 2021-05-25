@@ -349,7 +349,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
-			// 处理实现了被@Import导入的 ImportBeanDefinitionRegistrar 的实现类
+			// 1. 处理 @Import 导入的配置类
+			// 2. 处理 @Bean 注解的方法 -> 处理了公共注解, 例如 @Lazy @Primary @DependsOn @Role @Description
+			// 3. 处理 @ImportedResource 配置
+			// 3. 处理 @Import 导入的 org.springframework.context.annotation.ImportBeanDefinitionRegistrar 配置
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
