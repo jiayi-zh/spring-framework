@@ -245,8 +245,11 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		// org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean 创建 BeanWrapper 后调用
-		//
+		// injectionMetadataCache
+		// key -> beanName 如果不为空则为 beanName, 为空则为 beanType 的类名
+		// value -> beanType 中所有指定注解(默认@Autowire @Value)作用的字段集合 -> org.springframework.beans.factory.annotation.InjectionMetadata.InjectedElement
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, beanType, null);
+		// TODO
 		metadata.checkConfigMembers(beanDefinition);
 	}
 
@@ -443,7 +446,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 
 
 	private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, @Nullable PropertyValues pvs) {
-		// 默认使用 beanName 作为缓存键
+		// 生成 Map<String, InjectionMetadata> injectionMetadataCache 的 key
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
 		// Quick check on the concurrent map first, with minimal locking.
@@ -456,7 +459,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
-					// 根据类名
+					// 根据 Clazz 创建 org.springframework.beans.factory.annotation.InjectionMetadata 实现并放入缓存
 					metadata = buildAutowiringMetadata(clazz);
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}
