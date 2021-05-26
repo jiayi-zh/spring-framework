@@ -14,6 +14,12 @@ public class AutowiredAnnotationBeanPostProcessorProcessDetail {
 
 	private static User user;
 
+	/**
+	 * 注入时机: {@link org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredFieldElement#inject(java.lang.Object, java.lang.String, org.springframework.beans.PropertyValues)}
+	 */
+	@Autowired
+	private User user1;
+
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(AutowiredAnnotationBeanPostProcessorProcessDetail.class);
@@ -29,6 +35,9 @@ public class AutowiredAnnotationBeanPostProcessorProcessDetail {
 		applicationContext.close();
 	}
 
+	/**
+	 * 注入时机: {@link org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.AutowiredMethodElement#inject(java.lang.Object, java.lang.String, org.springframework.beans.PropertyValues)}
+	 */
 	@Autowired
 	public void setUser(User user) {
 		AutowiredAnnotationBeanPostProcessorProcessDetail.user = user;

@@ -264,7 +264,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
 			throws BeanCreationException {
 		// Let's check for lookup methods here...
-		// 处理 @Lookup 注解 TODO
+		// 处理 @Lookup 注解 -> 遍历读取当前 beanClass 及其父 class 的所有方法上的 @Lookup 注解, 将其封装为 LookupOverride 对象后加入 RootBeanDefinition 中
 		if (!this.lookupMethodsChecked.contains(beanName)) {
 			if (AnnotationUtils.isCandidateClass(beanClass, Lookup.class)) {
 				try {
@@ -673,6 +673,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 				}
 			}
 			if (value != null) {
+				// 使用反射给字段赋值
 				ReflectionUtils.makeAccessible(field);
 				field.set(bean, value);
 			}
@@ -721,6 +722,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 					currDesc.setContainingClass(bean.getClass());
 					descriptors[i] = currDesc;
 					try {
+						// 调用BeanFactory的方法进行依赖查找
 						Object arg = beanFactory.resolveDependency(currDesc, beanName, autowiredBeans, typeConverter);
 						if (arg == null && !this.required) {
 							arguments = null;
@@ -760,6 +762,7 @@ public class AutowiredAnnotationBeanPostProcessor extends InstantiationAwareBean
 			}
 			if (arguments != null) {
 				try {
+					// 反射调用方法
 					ReflectionUtils.makeAccessible(method);
 					method.invoke(bean, arguments);
 				}
