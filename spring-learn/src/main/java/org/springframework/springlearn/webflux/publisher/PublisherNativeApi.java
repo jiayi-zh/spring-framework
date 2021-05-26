@@ -1,14 +1,11 @@
 package org.springframework.springlearn.webflux.publisher;
 
-import org.reactivestreams.Publisher;
-import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 /**
  * {@link reactor.core.publisher.Mono} 与 {@link reactor.core.publisher.Flux} 测试
@@ -23,7 +20,8 @@ public class PublisherNativeApi {
 	private static final Flux<Integer> FLUX_PUBLISHER = Flux.fromStream(DATA_SOURCE.stream());
 
 	public static void main(String[] args) {
-		CompletableFuture<String> completableFuture = new CompletableFuture<>();
+
+
 
 		new Thread(() -> {
 			for (int i = 0; i < 10; i++) {
