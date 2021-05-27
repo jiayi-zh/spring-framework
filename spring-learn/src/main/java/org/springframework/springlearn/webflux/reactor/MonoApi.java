@@ -1,7 +1,5 @@
 package org.springframework.springlearn.webflux.reactor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -36,17 +34,17 @@ import java.util.function.Supplier;
  * @author ZhengYu
  * @version 1.0 2021/5/26 18:29
  **/
-
 public class MonoApi {
 
-	private static final Log log = LogFactory.getLog(MonoApi.class);
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		// Mono 创建示例
 		api_createMono();
 
 	}
 
-	public static void api_createMono() {
+	public static void api_createMono() throws InterruptedException {
+		Mono.just("Hello Mono").log().subscribe();
+		Mono.delay(Duration.ofSeconds(2)).map(String::valueOf).log().subscribe();
+		Thread.sleep(4000);
 	}
 }
