@@ -1,9 +1,8 @@
 package org.springframework.springlearn.webflux.reactor;
 
 import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 
 import java.time.Duration;
 import java.util.function.*;
@@ -21,6 +20,9 @@ import java.util.stream.Stream;
  * {@link Flux#fromArray(Object[])}
  * {@link Flux#merge(Publisher[])}
  * {@link Flux#interval(Duration)}
+ * <p>
+ * {@link Flux#create(Consumer, FluxSink.OverflowStrategy)} 用来创建flux和mono，通过出入一个callback函数用来对sink进行操作
+ * {@link Flux#}
  * 监控与副作用 doOnXXX()
  * {@link Flux#doOnSubscribe(Consumer)}    用以监控onSubscribe()方法的执行
  * {@link Flux#doOnRequest(LongConsumer)}  对request行为监控产生副作用
@@ -42,7 +44,7 @@ import java.util.stream.Stream;
  * {@link reactor.core.publisher.BaseSubscriber}  封装了原生的方式，简化处理的逻辑
  * {@link Flux#limitRate(int)}                    恒定速率请求
  * {@link Flux#limitRate(int, int)}               初始请求数量、后续补充百分比
- *
+ * <p>
  * {@link Flux#}
  *
  * @author ZhengYu
@@ -59,8 +61,6 @@ public class FluxApi {
 
 		// OnError
 		// testOnErrorXXX();
-
-		testBackpressure();
 
 		Thread.sleep(30000);
 	}
@@ -79,11 +79,34 @@ public class FluxApi {
 						() -> System.out.println("序列中的所有元素都成功消费才会执行"),
 						subscription -> subscription.request(1) // 设定从源头获取只一个元素
 				);
+
 		Flux.range(100, 3).subscribe(FluxApi::print);
 
 		Flux.interval(Duration.ofSeconds(1)).subscribe(FluxApi::print);
 
 		Thread.sleep(5000);
+	}
+
+	public static void api_create_generate() {
+//		Flux
+//				.create(fluxSink -> {
+//					fluxSink.next()
+//				})
+//				.log()
+//				.subscribe();
+
+		Flux
+				.generate(
+						() -> 0,
+						(i, sink) -> {
+							sink.next(i * i);
+							if (i == 5) sink.complete();
+							return ++i;
+						},
+						state -> print("the final state is:" + state)
+				)
+				.log()
+				.subscribe();
 	}
 
 	public static Flux<Integer> api_doOnXXX() throws InterruptedException {
@@ -172,55 +195,6 @@ public class FluxApi {
 				.onErrorReturn(RuntimeException.class, "test on error return")
 				.subscribe();
 		Thread.sleep(5000);
-	}
-
-	public static void testBackpressure() {
-		Flux
-				.interval(Duration.ofSeconds(1))
-				.log()
-				.subscribe(new Subscriber<Long>() {
-
-					private int count = 0;
-
-					private Subscription subscription;
-
-					private int requestCount = 2;
-
-					private long latestTime = 0;
-
-					@Override
-					public void onSubscribe(Subscription s) {
-						this.subscription = s;
-						s.request(requestCount);
-					}
-
-					@Override
-					public void onNext(Long num) {
-						long current = System.currentTimeMillis();
-						print(String.format("接收到: %d, 距离上次耗时: %d", num, latestTime == 0 ? 0 : current - latestTime));
-						latestTime = current;
-						count++;
-						if (count == requestCount) {  // 通过count控制每次request两个元素
-							try {
-								Thread.sleep(4000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							subscription.request(requestCount);
-							count = 0;
-						}
-					}
-
-					@Override
-					public void onError(Throwable t) {
-
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-				});
 	}
 
 	private static void print(Object o) {
