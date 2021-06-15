@@ -36,10 +36,13 @@ public class ProxyConfig implements Serializable {
 	// 此参数控制生成的代理对象使用 JDK 动态代理还是 CGLIB 动态代理
 	private boolean proxyTargetClass = false;
 
+	// 标记是否对代理进行优化。启动优化通常意味着在代理对象被创建后，增强的修改将不会生效，因此默认值为false
 	private boolean optimize = false;
 
+	// 该属性用于空值生成的代理对象是否可以强制转型为Advised，默认值为false，表示任何生成的代理对象都可以强制转换成Advised，true是不可以，可以通过Adviced查询代理对象的一些状态
 	boolean opaque = false;
 
+	// 标记代理对象是否应该被aop框架通过AopContext以ThreadLocal的形式暴露出去
 	boolean exposeProxy = false;
 
 	// 配置是否冻结

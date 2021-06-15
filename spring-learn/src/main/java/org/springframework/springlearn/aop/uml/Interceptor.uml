@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>org.aopalliance.aop.Advice</OriginalElement>
+  <nodes>
+    <node x="156.0" y="80.0">org.springframework.aop.BeforeAdvice</node>
+    <node x="100.0" y="0.0">org.aopalliance.aop.Advice</node>
+    <node x="0.0" y="80.0">org.springframework.aop.AfterAdvice</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.springframework.aop.AfterAdvice" target="org.aopalliance.aop.Advice">
+      <point x="0.0" y="-15.0" />
+      <point x="68.0" y="55.0" />
+      <point x="124.0" y="55.0" />
+      <point x="-24.0" y="15.0" />
+    </edge>
+    <edge source="org.springframework.aop.BeforeAdvice" target="org.aopalliance.aop.Advice">
+      <point x="0.0" y="-15.0" />
+      <point x="228.0" y="55.0" />
+      <point x="172.0" y="55.0" />
+      <point x="24.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="150.0" y="55.0" />
+  <SelectedNodes>
+    <node>org.aopalliance.aop.Advice</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -154,13 +154,10 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		this.arguments = arguments;
 	}
 
-
 	@Override
 	@Nullable
 	public Object proceed() throws Throwable {
-		// 当执行到最后一个 Interceptor 或者 Interceptor 的数量为0时
-		// PS： MethodBeforeAdvice 会先执行结束, MethodAfterAdvice 会不断压栈, 直到所有的 MethodBeforeAdvice 执行结束,
-		// 这时候会调用 invokeJoinpoint() 方法, MethodAfterAdvice 才会弹栈然后执行
+		// 当执行到最后一个 Interceptor 或者 Interceptor 的数量为0时, 使用反射调用真正的方法。MethodBeforeAdvice 会先直接执行, MethodAfterAdvice 会不断压栈, 直到真正的方法的调用
 		// We start with an index of -1 and increment early.
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
 			return invokeJoinpoint();
@@ -169,11 +166,10 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		// 从 Interceptor 列表中获取待执行, 并且下标自增
 		Object interceptorOrInterceptionAdvice =
 				this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
-		// 如果为 InterceptorAndDynamicMethodMatcher 需要先过滤类再调用
+		// 如果为 InterceptorAndDynamicMethodMatcher 需要先判断当前方法是否匹配再调用，不匹配直接跳过
 		if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
 			// Evaluate dynamic method matcher here: static part will already have
 			// been evaluated and found to match.
-			// 当
 			InterceptorAndDynamicMethodMatcher dm =
 					(InterceptorAndDynamicMethodMatcher) interceptorOrInterceptionAdvice;
 			Class<?> targetClass = (this.targetClass != null ? this.targetClass : this.method.getDeclaringClass());
