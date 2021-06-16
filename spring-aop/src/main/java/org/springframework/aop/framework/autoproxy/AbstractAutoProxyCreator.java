@@ -237,7 +237,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object getEarlyBeanReference(Object bean, String beanName) {
 		// cacheKey 即为 beanName, 如果是 FactoryBean 会加在前面加 BeanFactory.FACTORY_BEAN_PREFIX
 		Object cacheKey = getCacheKey(bean.getClass(), beanName);
-		// 缓存到 earlyProxyReferences 中 TODO
+		// 缓存到 earlyProxyReferences 中
 		this.earlyProxyReferences.put(cacheKey, bean);
 		// 创建代理对象
 		return wrapIfNecessary(bean, beanName, cacheKey);
@@ -298,7 +298,12 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
+			// 不存在循环依赖: 执行 wrapIfNecessary()
+			// 存在循环依赖:
+			//    1. 早期Bean没有被修改, 直接跳过
+			//    2. 早期Bean被修改, 重新执行 wrapIfNecessary()
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) {
+				// 如果当前Bean有匹配的Advisor, 则使用 AOP 生成代理对象
 				return wrapIfNecessary(bean, beanName, cacheKey);
 			}
 		}
@@ -335,23 +340,29 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return a proxy wrapping the bean, or the raw bean instance as-is
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+		// TODO
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
+		// 当前Bean已经被标记为没有配置AOP, 直接返回
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
+		// 如果Bean为AOP基建Bean 或 应该跳过(.ORIGINAL), 直接返回
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;
 		}
 
 		// Create proxy if we have advice.
+		// 根据 bean class 匹配的 AdvicesAndAdvisors
 		Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
 		if (specificInterceptors != DO_NOT_PROXY) {
 			this.advisedBeans.put(cacheKey, Boolean.TRUE);
+			// 通过 AopProxy 创建 AOP 代理对象
 			Object proxy = createProxy(
 					bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+			// 将代理对象加入缓存
 			this.proxyTypes.put(cacheKey, proxy.getClass());
 			return proxy;
 		}
@@ -449,7 +460,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			AutoProxyUtils.exposeTargetClass((ConfigurableListableBeanFactory) this.beanFactory, beanName, beanClass);
 		}
 
+		// 创建 ProxyFactory
 		ProxyFactory proxyFactory = new ProxyFactory();
+		// 将 ProxyConfig 拷贝到 ProxyFactory
 		proxyFactory.copyFrom(this);
 
 		if (!proxyFactory.isProxyTargetClass()) {
@@ -461,6 +474,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 			}
 		}
 
+		// 将公共的和特殊的 Advisor 合并, 并适配成 Interceptor
 		Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
 		proxyFactory.addAdvisors(advisors);
 		proxyFactory.setTargetSource(targetSource);
@@ -512,8 +526,10 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 */
 	protected Advisor[] buildAdvisors(@Nullable String beanName, @Nullable Object[] specificInterceptors) {
 		// Handle prototypes correctly...
+		// 处理公共的的 Interceptor @see #setInterceptorNames()
 		Advisor[] commonInterceptors = resolveInterceptorNames();
 
+		// 追加特殊的 Interceptor
 		List<Object> allInterceptors = new ArrayList<>();
 		if (specificInterceptors != null) {
 			allInterceptors.addAll(Arrays.asList(specificInterceptors));
@@ -533,6 +549,7 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 					" common interceptors and " + nrOfSpecificInterceptors + " specific interceptors");
 		}
 
+		// 将所有的 Advisor 适配成 Interceptor
 		Advisor[] advisors = new Advisor[allInterceptors.size()];
 		for (int i = 0; i < allInterceptors.size(); i++) {
 			advisors[i] = this.advisorAdapterRegistry.wrap(allInterceptors.get(i));
