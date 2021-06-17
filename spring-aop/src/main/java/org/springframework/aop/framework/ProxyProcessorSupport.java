@@ -102,6 +102,7 @@ public class ProxyProcessorSupport extends ProxyConfig implements Ordered, BeanC
 	 * @param proxyFactory the ProxyFactory for the bean
 	 */
 	protected void evaluateProxyInterfaces(Class<?> beanClass, ProxyFactory proxyFactory) {
+		// 获取 beanClass 的所有接口
 		Class<?>[] targetInterfaces = ClassUtils.getAllInterfacesForClass(beanClass, getProxyClassLoader());
 		boolean hasReasonableProxyInterface = false;
 		for (Class<?> ifc : targetInterfaces) {

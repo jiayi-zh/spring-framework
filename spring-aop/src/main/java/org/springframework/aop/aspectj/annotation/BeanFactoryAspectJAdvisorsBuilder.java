@@ -89,6 +89,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 				if (aspectNames == null) {
 					List<Advisor> advisors = new ArrayList<>();
 					aspectNames = new ArrayList<>();
+					// 从IOC容器中获取所有的bean名称
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 							this.beanFactory, Object.class, true, false);
 					for (String beanName : beanNames) {
@@ -101,6 +102,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 						if (beanType == null) {
 							continue;
 						}
+						// 如果类上存在 @Aspect 注解, 则将名称及Advisor缓存
 						if (this.advisorFactory.isAspect(beanType)) {
 							aspectNames.add(beanName);
 							AspectMetadata amd = new AspectMetadata(beanType, beanName);

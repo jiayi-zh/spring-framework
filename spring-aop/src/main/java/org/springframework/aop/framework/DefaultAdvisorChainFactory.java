@@ -78,7 +78,8 @@ public class DefaultAdvisorChainFactory implements AdvisorChainFactory, Serializ
 					}
 					if (match) {
 						MethodInterceptor[] interceptors = registry.getInterceptors(advisor);
-						// 如果时运行时
+						// 如果 MethodMatcher 设置为运行时, 则将 MethodInterceptor 封装为 InterceptorAndDynamicMethodMatcher,
+						// 为什么封装: 因为获取方法 MethodInterceptor 链的返回结果要缓存起来
 						if (mm.isRuntime()) {
 							// Creating a new object instance in the getInterceptors() method
 							// isn't a problem as we normally cache created chains.

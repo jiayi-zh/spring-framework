@@ -592,7 +592,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 						"' to allow for resolving potential circular references");
 			}
 			// 此时的Bean还没有完成属性注入
-			// 创建一个对象工厂添加到三级缓存(singletonFactories)中
+			// 创建一个对象工厂添加到二级缓存(singletonFactories)中
 			addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean));
 		}
 
