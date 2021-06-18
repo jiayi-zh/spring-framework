@@ -458,7 +458,7 @@ public @interface Configuration {
 	 * behaviorally equivalent to removing the {@code @Configuration} stereotype.
 	 * @since 5.2
 	 */
-	//
+	// 是否代理 @Bean 方法, 将返回值作为单例对象, 在直接调用该方法时返回这个单例对象
 	boolean proxyBeanMethods() default true;
 
 }

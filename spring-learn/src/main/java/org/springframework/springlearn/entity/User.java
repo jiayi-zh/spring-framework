@@ -1,5 +1,6 @@
 package org.springframework.springlearn.entity;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
@@ -8,7 +9,9 @@ import java.util.Properties;
  * @author ZhengYu
  * @version 1.0 2021/1/16 22:21
  **/
-public class User {
+public class User implements Serializable {
+
+	private static final long serialVersionUID = -4730927295193090689L;
 
 	private Long id;
 
